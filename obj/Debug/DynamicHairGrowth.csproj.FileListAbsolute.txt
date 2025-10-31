@@ -1,0 +1,8 @@
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\bin\Debug\DynamicHairGrowth.dll
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\bin\Debug\DynamicHairGrowth.pdb
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\bin\Debug\ScriptHookVDotNet3.dll
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\obj\Debug\DynamicHairGrowth.csproj.AssemblyReference.cache
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\obj\Debug\DynamicHairGrowth.csproj.CoreCompileInputs.cache
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\obj\Debug\DynamicH.746AF876.Up2Date
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\obj\Debug\DynamicHairGrowth.dll
+C:\Users\clope\OneDrive\Documents\GTA V Modding\repos\repos\GTAV_CorrectProjectType\DynamicHairGrowth\obj\Debug\DynamicHairGrowth.pdb
