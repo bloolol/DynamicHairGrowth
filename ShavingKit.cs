@@ -41,9 +41,19 @@ namespace DynamicHairGrowth
                             Vector3 position = Game.Player.Character.Position;
                             vector3 = new Vector3();
                             Vector3 rotation = vector3;
-                            this.cam = World.CreateCamera(position, rotation, 50f);
-                            this.cam.AttachTo(Game.Player.Character, new Vector3(0.25f, 0.5f, 0.0f));
-                            this.cam.PointAt(Game.Player.Character);
+                            //this.cam = World.CreateCamera(position, rotation, 50f);
+                            //this.cam.AttachTo(Game.Player.Character, new Vector3(0.25f, 0.5f, 0.0f));
+                            //this.cam.PointAt(Game.Player.Character);
+                             this.cam = World.CreateCamera(Game.Player.Character.Position, Vector3.Zero, 50f);
+
+                            // Get the head bone as a PedBone object
+                            PedBone headBone = Game.Player.Character.Bones[Bone.SkelHead];
+
+                            // Attach camera to the head bone with offset
+                            this.cam.AttachTo(headBone, new Vector3(0.25f, 0.5f, 0.0f));
+
+                            // Point the camera at the head bone
+                            this.cam.PointAt(headBone);
                             World.RenderingCamera = this.cam;
                             Game.Player.CanControlCharacter = false;
                             this.active = true;
