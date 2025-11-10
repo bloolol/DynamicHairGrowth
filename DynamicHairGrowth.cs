@@ -2,7 +2,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 
@@ -23,6 +23,36 @@ namespace DynamicHairGrowth
 
         public Main() => this.Tick += new EventHandler(this.OnTick);
 
+        private void OnTick(object sender, EventArgs e)
+        {
+            Ped player = Game.Player.Character;
+            bool inbarbershop = IsPlayerInTargetInterior();
+            if (inbarbershop)
+                return;
+            if (this.timelapse)
+                Function.Call(Hash.ADD_TO_CLOCK_TIME, new InputArgument[3]
+                {
+          (InputArgument) 0,
+          (InputArgument) 5,
+          (InputArgument) 0
+                });
+            if (World.CurrentDate >= this.LastHairTime.AddHours((double)Main.HairGrowthHours))
+            {
+                this.LastHairTime = World.CurrentDate.AddHours((double)Main.HairGrowthHours);
+                Main.michael.IncreaseHair();
+                Main.franklin.IncreaseHair();
+                Main.trevor.IncreaseHair();
+                Main.UpdateAllHair();
+            }
+            if (!(World.CurrentDate >= this.LastFacialTime.AddHours((double)Main.FacialGrowthHours)))
+                return;
+            this.LastFacialTime = World.CurrentDate.AddHours((double)Main.FacialGrowthHours);
+            Main.michael.IncreaseFacial();
+            Main.franklin.IncreaseFacial();
+            Main.trevor.IncreaseFacial();
+            Main.UpdateAllHair();
+        }
+
         public static void UpdateAllHair()
         {
             Main.UpdateMichaelHair();
@@ -41,7 +71,8 @@ namespace DynamicHairGrowth
 
         private static void UpdateMichaelHair()
         {
-            foreach (Ped nearbyPed in World.GetNearbyPeds(Game.Player.Character.Position, 50f))
+            Ped player = Game.Player.Character;
+            foreach (Ped nearbyPed in World.GetNearbyPeds(player.Position, 50f))
             {
                 if (nearbyPed.Model == (Model)PedHash.Michael)
                 {
@@ -89,7 +120,8 @@ namespace DynamicHairGrowth
 
         private static void UpdateFranklinHair()
         {
-            foreach (Ped nearbyPed in World.GetNearbyPeds(Game.Player.Character.Position, 50f))
+            Ped player = Game.Player.Character;
+            foreach (Ped nearbyPed in World.GetNearbyPeds(player.Position, 50f))
             {
                 if (nearbyPed.Model == (Model)PedHash.Franklin)
                 {
@@ -148,7 +180,8 @@ namespace DynamicHairGrowth
 
         private static void UpdateTrevorHair()
         {
-            foreach (Ped nearbyPed in World.GetNearbyPeds(Game.Player.Character.Position, 50f))
+            Ped player = Game.Player.Character;
+            foreach (Ped nearbyPed in World.GetNearbyPeds(player.Position, 50f))
             {
                 if (nearbyPed.Model == (Model)PedHash.Trevor)
                 {
@@ -207,43 +240,21 @@ namespace DynamicHairGrowth
             }
         }
 
-        private void OnTick(object sender, EventArgs e)
-        {
-            if (this.timelapse)
-                Function.Call(Hash.ADD_TO_CLOCK_TIME, new InputArgument[3]
-                {
-          (InputArgument) 0,
-          (InputArgument) 5,
-          (InputArgument) 0
-                });
-            if (World.CurrentDate >= this.LastHairTime.AddHours((double)Main.HairGrowthHours))
-            {
-                this.LastHairTime = World.CurrentDate.AddHours((double)Main.HairGrowthHours);
-                Main.michael.IncreaseHair();
-                Main.franklin.IncreaseHair();
-                Main.trevor.IncreaseHair();
-                Main.UpdateAllHair();
-            }
-            if (!(World.CurrentDate >= this.LastFacialTime.AddHours((double)Main.FacialGrowthHours)))
-                return;
-            this.LastFacialTime = World.CurrentDate.AddHours((double)Main.FacialGrowthHours);
-            Main.michael.IncreaseFacial();
-            Main.franklin.IncreaseFacial();
-            Main.trevor.IncreaseFacial();
-            Main.UpdateAllHair();
-        }
+
 
         public static Main.HairGrowth GetCurrentPlayerHairGrowth()
         {
-            if (Game.Player.Character.Model == (Model)PedHash.Michael)
+            Ped player = Game.Player.Character;
+            if (player.Model == (Model)PedHash.Michael)
                 return Main.michael;
-            if (Game.Player.Character.Model == (Model)PedHash.Franklin)
+            if (player.Model == (Model)PedHash.Franklin)
                 return Main.franklin;
-            return Game.Player.Character.Model == (Model)PedHash.Trevor ? Main.trevor : Main.michael;
+            return player.Model == (Model)PedHash.Trevor ? Main.trevor : Main.michael;
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            Ped player = Game.Player.Character;
             if (e.KeyCode == Keys.J)
             {
                 this.ResetAllHair();
@@ -255,17 +266,17 @@ namespace DynamicHairGrowth
                 GTA.UI.Screen.ShowSubtitle("timelapse: " + this.timelapse.ToString(), 2000);
             }
             if (e.KeyCode == Keys.Y)
-                Game.Player.Character.CurrentVehicle.ApplyForce(Game.Player.Character.UpVector * 5f);
+                player.CurrentVehicle.ApplyForce(player.UpVector * 5f);
             if (e.KeyCode != Keys.U)
                 return;
-            //Camera camera = World.CreateCamera(Game.Player.Character.Position, new Vector3(), 50f);
-            //camera.AttachTo(Game.Player.Character, new Vector3(0.25f, 0.5f, 0.0f));
-            //camera.PointAt(Game.Player.Character);
+            //Camera camera = World.CreateCamera(player.Position, new Vector3(), 50f);
+            //camera.AttachTo(player, new Vector3(0.25f, 0.5f, 0.0f));
+            //camera.PointAt(player);
 
-            Camera camera = World.CreateCamera(Game.Player.Character.Position, Vector3.Zero, 50f);
+            Camera camera = World.CreateCamera(player.Position, Vector3.Zero, 50f);
 
             // Get the head bone as a PedBone object
-            PedBone headBone = Game.Player.Character.Bones[Bone.SkelHead];
+            PedBone headBone = player.Bones[Bone.SkelHead];
 
             // Attach camera to the head bone with offset
             camera.AttachTo(headBone, new Vector3(0.25f, 0.5f, 0.0f));
@@ -339,5 +350,28 @@ namespace DynamicHairGrowth
                 this.FacialLength = 0;
             }
         }
+        private static readonly HashSet<int> TargetInteriorIDs = new HashSet<int>
+{
+    148866, // Hawick Barber (near Michael's house)
+    148482, // Davis Barber (near Franklin's old house)
+    148994, // Del Perro Barber (near Vespucci Beach)
+    149250, // Sandy Shores Barber (Trevor's area)
+    149506, // Mirror Park Barber (East Vinewood)
+    149762  // Vinewood Barber (near Eclipse Blvd)
+};
+        public static bool IsPlayerInTargetInterior()
+        {
+            int currentInterior = GetPlayerInteriorID();
+            return TargetInteriorIDs.Contains(currentInterior);
+        }
+        public static int GetPlayerInteriorID()
+        {
+            Ped player = Game.Player.Character;
+            if (player == null || !player.Exists()) return -1;
+
+            return Function.Call<int>(Hash.GET_INTERIOR_FROM_ENTITY, player);
+        }
+
     }
+
 }
